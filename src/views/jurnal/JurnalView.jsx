@@ -10,7 +10,8 @@ export default function JurnalView({ user }) {
     jamKe: '',
     kelas: '',
     mapel: '',
-    materi: ''
+    materi: '',
+    guruPengampu: user?.nama || '' // Default terisi nama user login
   });
 
   const [initData, setInitData] = useState({
@@ -26,7 +27,7 @@ export default function JurnalView({ user }) {
 
   useEffect(() => {
     loadInitData();
-  }, []);
+  }, [formData.tanggal]);
 
   const loadInitData = async () => {
     setIsFetchingInit(true);
@@ -102,10 +103,11 @@ export default function JurnalView({ user }) {
       ? Object.keys(absenData).map(nama => `${formatNama(nama)} (${absenData[nama]})`).join(', ')
       : 'Nihil'; 
 
+    // Payload dikirim ke GAS dengan kejelasan identitas penginput & pengampu
     const payload = {
       ...formData,
-      jamKe: formData.jamKe, 
-      namaGuru: user?.nama || 'Tanpa Nama', 
+      guruPengampu: formData.guruPengampu || user?.nama || 'Tanpa Nama',
+      guruInput: user?.nama || 'Tanpa Nama', // 💡 TEREKAM OTOMATIS DARI AKUN LOGIN
       keteranganAbsen: rekapAbsen
     };
 
@@ -113,7 +115,12 @@ export default function JurnalView({ user }) {
     
     if (result && result.status === 'success') {
       alert('Jurnal dan data absen berhasil disimpan!');
-      setFormData({ ...formData, materi: '', jamKe: '' }); 
+      setFormData({ 
+        ...formData, 
+        materi: '', 
+        jamKe: '',
+        guruPengampu: user?.nama || ''
+      }); 
       setAbsenData({}); 
       loadInitData(); 
     } else {
@@ -126,7 +133,12 @@ export default function JurnalView({ user }) {
       
       {/* KIRI: Formulir Input & Absensi */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Isi Jurnal & Absensi</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-800">Isi Jurnal & Absensi</h2>
+          <span className="text-xs bg-blue-50 text-blue-700 font-semibold px-2.5 py-1 rounded-md border border-blue-100">
+            Guru: {user?.nama || 'Anonim'}
+          </span>
+        </div>
         
         {isFetchingInit ? (
           <div className="text-center py-10 text-gray-500 animate-pulse font-medium">Sinkronisasi data...</div>
@@ -135,18 +147,24 @@ export default function JurnalView({ user }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-                <input type="date" name="tanggal" value={formData.tanggal} onChange={handleTanggalChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input type="date" name="tanggal" value={formData.tanggal} onChange={handleTanggalChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Jam Ke-</label>
-                <input type="text" name="jamKe" value={formData.jamKe} onChange={handleChange} placeholder="Contoh: 1-2" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input type="text" name="jamKe" value={formData.jamKe} onChange={handleChange} placeholder="Contoh: 1-2" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
               </div>
+            </div>
+
+            {/* Input Guru Pengampu */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Guru Pengampu</label>
+              <input type="text" name="guruPengampu" value={formData.guruPengampu} onChange={handleChange} placeholder="Nama Guru Mengajar" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Pilih Kelas</label>
-                <select name="kelas" value={formData.kelas} onChange={handleKelasChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
+                <select name="kelas" value={formData.kelas} onChange={handleKelasChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                   <option value="">-- Kelas --</option>
                   {initData.kelas.map((kls, i) => (
                     <option key={i} value={kls}>{kls}</option>
@@ -155,7 +173,7 @@ export default function JurnalView({ user }) {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Pilih Mapel</label>
-                <select name="mapel" value={formData.mapel} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
+                <select name="mapel" value={formData.mapel} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                   <option value="">-- Mata Pelajaran --</option>
                   {initData.mapel.map((mpl, i) => (
                     <option key={i} value={mpl}>{mpl}</option>
@@ -166,7 +184,7 @@ export default function JurnalView({ user }) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Materi Pembelajaran</label>
-              <textarea name="materi" value={formData.materi} onChange={handleChange} rows="3" placeholder="Ketik ringkasan materi..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+              <textarea name="materi" value={formData.materi} onChange={handleChange} rows="3" placeholder="Ketik ringkasan materi..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"></textarea>
             </div>
 
             {formData.kelas && (
@@ -207,7 +225,7 @@ export default function JurnalView({ user }) {
         )}
       </div>
 
-      {/* KANAN: Tabel Riwayat Web (Tanpa Tombol Cetak) */}
+      {/* KANAN: Tabel Riwayat Web */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit flex flex-col">
         <div className="mb-6">
           <h2 className="text-xl font-bold text-gray-800 mb-1">Riwayat Jurnal</h2>
@@ -223,17 +241,23 @@ export default function JurnalView({ user }) {
             <table className="w-full text-left border-collapse text-sm">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 uppercase tracking-wider text-xs">
-                  <th className="p-3 border-b border-gray-200">Kelas</th>
-                  <th className="p-3 border-b border-gray-200">Mapel</th>
+                  <th className="p-3 border-b border-gray-200">Kelas/Jam</th>
+                  <th className="p-3 border-b border-gray-200">Guru & Mapel</th>
                   <th className="p-3 border-b border-gray-200">Absensi</th>
                 </tr>
               </thead>
-              <tbody className="text-gray-700">
+              <tbody className="text-gray-700 divide-y divide-gray-100">
                 {initData.riwayat.map((item, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="p-3 border-b border-gray-100 font-semibold">{item.kelas}</td>
-                    <td className="p-3 border-b border-gray-100">{item.mapel}</td>
-                    <td className="p-3 border-b border-gray-100 text-xs text-red-600">{item.absen}</td>
+                    <td className="p-3 border-b border-gray-100">
+                      <span className="font-bold text-blue-600 block">{item.kelas}</span>
+                      <span className="text-xs text-gray-400">Jam {item.jamKe || '-'}</span>
+                    </td>
+                    <td className="p-3 border-b border-gray-100">
+                      <span className="font-medium text-gray-800 block">{item.mapel}</span>
+                      <span className="text-xs text-gray-500">👤 {item.guru || item.guruPengampu || '-'}</span>
+                    </td>
+                    <td className="p-3 border-b border-gray-100 text-xs text-red-600 font-medium">{item.absen}</td>
                   </tr>
                 ))}
               </tbody>
