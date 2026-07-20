@@ -1,6 +1,30 @@
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 
+// 💡 PUSAT DATA: Edit daftar Kelas dan Mapel di sini untuk memperbaruinya
+const DAFTAR_MAPEL = [
+  'Aqidah Akhlaq',
+  'Sirah Nabawiyah',
+  'Fiqih/PAI',
+  'Bahasa Arab',
+  'Nahwu Sharaf',
+  'Matematika', 
+  'Bahasa Indonesia', 
+  'Bahasa Inggris', 
+  'IPA', 
+  'IPS', 
+  'Infromatika',
+  'Bahasa Jawa',
+  'PJOK',
+  'Prakarya'
+];
+
+const DAFTAR_KELAS = [
+  '7A', '7B', '7C', 
+  '8A', '8B', '8C', 
+  '9A', '9B', '9C'
+];
+
 export default function BankSoalView() {
   const { fetchGAS, isLoading } = useAppContext();
   
@@ -109,18 +133,20 @@ export default function BankSoalView() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Mata Pelajaran</label>
             <select name="mapel" value={formData.mapel} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
               <option value="">-- Pilih Mata Pelajaran --</option>
-              <option value="Matematika">Matematika</option>
-              <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-              <option value="IPA">IPA</option>
+              {/* 💡 Looping otomatis menggunakan data DAFTAR_MAPEL */}
+              {DAFTAR_MAPEL.map((mapel) => (
+                <option key={mapel} value={mapel}>{mapel}</option>
+              ))}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
             <select name="kelas" value={formData.kelas} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
               <option value="">-- Pilih Kelas --</option>
-              <option value="7A">7A</option>
-              <option value="7B">7B</option>
-              <option value="8A">8A</option>
+              {/* 💡 Looping otomatis menggunakan data DAFTAR_KELAS */}
+              {DAFTAR_KELAS.map((kelas) => (
+                <option key={kelas} value={kelas}>{kelas}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -157,7 +183,6 @@ export default function BankSoalView() {
               </label>
             </div>
 
-            {/* Area Unggah Naskah muncul setelah Checklist terpenuhi */}
             {isAllChecked && (
               <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${fileNaskah ? 'border-green-400 bg-green-50' : 'border-indigo-300 bg-white'}`}>
                 <input type="file" id="naskah" accept=".pdf,.doc,.docx" onChange={handleFileChange} className="hidden" />
