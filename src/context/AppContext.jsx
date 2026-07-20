@@ -81,4 +81,11 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-export const useAppContext = () => useContext(AppContext);
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  // Pelindung: Jika dipanggil di luar AppProvider, berikan pesan yang jelas
+  if (!context) {
+    throw new Error('useAppContext harus digunakan di dalam <AppProvider>');
+  }
+  return context;
+};
