@@ -14,6 +14,7 @@ const DAFTAR_MAPEL = [
   'IPA', 
   'IPS', 
   'Infromatika',
+  'Pendidikan Pancasila',
   'Bahasa Jawa',
   'PJOK',
   'Prakarya'
