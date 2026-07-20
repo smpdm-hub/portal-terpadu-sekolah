@@ -108,8 +108,8 @@ export default function BankSoalView() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tahun Pelajaran</label>
             <select name="tahunPelajaran" value={formData.tahunPelajaran} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="2024/2025">2024/2025</option>
-              <option value="2025/2026">2025/2026</option>
+              <option value="2026/2027">2026/2027</option>
+              <option value="2027/2028">2027/2028</option>
             </select>
           </div>
           <div>
