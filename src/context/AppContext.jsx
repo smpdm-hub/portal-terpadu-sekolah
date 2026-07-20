@@ -2,11 +2,10 @@ import { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext();
 
-// 💡 VARIABEL CADANGAN (FALLBACK): Masukkan URL Web App GAS paman di sini.
-// Jika file .env lokal tidak terbaca saat di-deploy ke hosting, URL ini yang akan otomatis bekerja.
-const FALLBACK_GAS_URL = "ttps://script.google.com/macros/s/AKfycbzplNqGBiiQnuEZcEbRD0wE3h9WAm7zrroiXAJ2zHGXoyj7NZBWMSLGOlTFZ7kKa0hm/exec";
+// 💡 PASTIKAN DIAWALI DENGAN "https://" (H-T-T-P-S)
+const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbzplNqGBiiQnuEZcEbRD0wE3h9WAm7zrroiXAJ2zHGXoyj7NZBWMSLGOlTFZ7kKa0hm/exec";
 
-// Variabel memori lokal untuk melacak waktu pemanggilan terakhir (Anti-Spam)
+// Variabel lokal untuk Anti-Spam (Cooldown 3 Detik)
 let lastFetchTime = {};
 
 export const AppProvider = ({ children }) => {
@@ -17,28 +16,26 @@ export const AppProvider = ({ children }) => {
   const fetchGAS = async (action, payload = {}) => {
     const now = Date.now();
 
-    // 1. TAMAN PELINDUNG: ANTI-SPAM KLIK (Jeda 3 Detik per Aksi)
+    // 1. ANTI-SPAM KLIK: Jeda 3 Detik per Aksi
     if (lastFetchTime[action] && (now - lastFetchTime[action] < 3000)) {
-      console.warn(`⏳ Anti-Spam Aktif: Memblokir pemanggilan brutal untuk aksi "${action}"`);
-      // Memberikan notifikasi ringan tanpa membebani server Google sama sekali
+      console.warn(`⏳ Anti-Spam: Memblokir pemanggilan cepat untuk "${action}"`);
       return { status: 'error', message: 'Mohon tunggu 3 detik sebelum menekan tombol lagi.' };
     }
     lastFetchTime[action] = now;
 
     setIsLoading(true);
     try {
-      // 2. PENENTUAN URL CERDAS: Utamakan .env, jika kosong gunakan Fallback
+      // 2. AMBIL URL: Utamakan .env, jika kosong pakai Fallback
       const envUrl = import.meta.env.VITE_GAS_WEB_APP_URL;
       const gasUrl = (envUrl && envUrl !== 'undefined') ? envUrl : FALLBACK_GAS_URL;
 
-      // X-RAY 1: Memastikan URL tidak benar-benar kosong atau belum diisi
-      if (!gasUrl || gasUrl.includes("GANTI_DENGAN_ID_SCRIPT_GAS_PAMAN")) {
-        console.error("X-RAY DETECT: URL GAS belum dikonfigurasi!");
-        alert("URL Google Apps Script belum diisi! Silakan ganti nilai FALLBACK_GAS_URL di file AppContext.jsx dengan URL Web App paman.");
+      // X-RAY 1: Validasi URL
+      if (!gasUrl || !gasUrl.startsWith('https://')) {
+        console.error("X-RAY DETECT: URL GAS tidak valid atau tidak diawali https://");
+        alert("URL Google Apps Script tidak valid! Pastikan diawali dengan 'https://'.");
         return null;
       }
 
-      // Pengiriman data menggunakan 'text/plain' untuk menghindari pemblokiran CORS browser
       const response = await fetch(gasUrl, {
         method: 'POST',
         headers: {
@@ -48,24 +45,21 @@ export const AppProvider = ({ children }) => {
         redirect: 'follow'
       });
 
-      // X-RAY 2: Menangkap balasan mentah sebelum diubah ke JSON
       const rawText = await response.text();
       
-      // Mencegah crash jika Google mengirim halaman HTML Error (misal karena salah hak akses)
+      // X-RAY 2: Tangkap jika Google mengirim respon HTML
       if (rawText.includes('<html') || rawText.includes('<!DOCTYPE')) {
-        console.error("X-RAY DETECT: Google menolak akses dan mengirim HTML:", rawText);
+        console.error("X-RAY DETECT: Google menolak akses:", rawText);
         alert("Akses ditolak oleh Google. Pastikan Deploy GAS diatur ke 'Siapa Saja' (Anyone).");
         return null;
       }
 
-      // Konversi balasan menjadi objek JSON React
-      const result = JSON.parse(rawText);
-      return result;
+      return JSON.parse(rawText);
 
     } catch (error) {
-      // X-RAY 3: Menangkap kendala koneksi atau CORS keras
-      console.error("X-RAY DETECT: Jaringan terputus atau CORS Block:", error);
-      alert("Gagal terhubung ke server Google. Periksa koneksi internet paman.");
+      // X-RAY 3: Tangkap kendala koneksi
+      console.error("X-RAY DETECT: Gagal terhubung:", error);
+      alert("Gagal terhubung ke server Google. Periksa URL GAS atau koneksi internet.");
       return null;
     } finally {
       setIsLoading(false);
@@ -83,7 +77,6 @@ export const AppProvider = ({ children }) => {
 
 export const useAppContext = () => {
   const context = useContext(AppContext);
-  // Pelindung: Jika dipanggil di luar AppProvider, berikan pesan yang jelas
   if (!context) {
     throw new Error('useAppContext harus digunakan di dalam <AppProvider>');
   }
