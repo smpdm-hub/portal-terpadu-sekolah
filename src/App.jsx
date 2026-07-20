@@ -65,7 +65,7 @@ export default function App() {
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Pusat Kendali Admin</h2>
             <div className="p-6 border border-indigo-100 bg-indigo-50/50 rounded-xl">
                <h3 className="font-bold text-indigo-900 text-lg mb-2">Master Database</h3>
-               <a href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener noreferrer" className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Buka Spreadsheet</a>
+               <a href="https://docs.google.com/spreadsheets/d/1baViZm_dNK5iq1-G1DVsiEKq8ljaOBeW10TWNppcpQA/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Buka Spreadsheet</a>
             </div>
           </div>
         );
