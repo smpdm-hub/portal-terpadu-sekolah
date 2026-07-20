@@ -35,8 +35,8 @@ export default function LoginView({ onLoginSuccess }) {
     <div className="flex items-center justify-center min-h-[70vh]">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-800">Login Akses Khusus</h2>
-          <p className="text-gray-500 text-sm mt-2">Silakan masuk untuk mengakses fitur administrator</p>
+          <h2 className="text-2xl font-bold text-gray-800">SSO SMP Darul Madinah</h2>
+          <p className="text-gray-500 text-sm mt-2">Silakan masuk untuk mengakses fitur terpadu GTK</p>
         </div>
 
         {errorMsg && (
@@ -80,7 +80,7 @@ export default function LoginView({ onLoginSuccess }) {
         </form>
         
         <p className="text-xs text-center text-gray-400 mt-6">
-          Gunakan username: <strong>admin</strong> dan password: <strong>admin123</strong> untuk uji coba awal.
+          Gunakan <strong>username</strong> dan <strong>password</strong> anda untuk login.
         </p>
       </div>
     </div>
