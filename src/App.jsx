@@ -1,3 +1,4 @@
+import DashboardView from './views/dashboard/DashboardView';
 import WalasView from './views/walas/WalasView';
 import BankSoalView from './views/bank-soal/BankSoalView';
 import DokumentasiView from './views/dokumentasi/DokumentasiView';
@@ -45,14 +46,20 @@ export default function App() {
     switch (activeTab) {
       case 'dashboard': 
         return (
-          <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Selamat Datang, {user.nama}!</h2>
-            <p className="text-gray-600 mb-4">Akses Anda: <span className="font-bold text-blue-600">{user.role}</span></p>
-            {isWalas && (
-              <div className="bg-green-50 p-4 rounded-lg text-sm text-green-800 border border-green-100 mb-4">
-                ✅ Anda tercatat sebagai Wali Kelas untuk kelas <strong>{user.kelasWali}</strong>.
-              </div>
-            )}
+          <div className="space-y-6">
+            {/* 1. KOTAK SELAMAT DATANG (Fungsi Lama Tetap Dipertahankan) */}
+            <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Selamat Datang, {user.nama}!</h2>
+              <p className="text-gray-600 mb-4">Akses Anda: <span className="font-bold text-blue-600">{user.role}</span></p>
+              {isWalas && (
+                <div className="bg-green-50 p-4 rounded-lg text-sm text-green-800 border border-green-100 mb-4">
+                  ✅ Anda tercatat sebagai Wali Kelas untuk kelas <strong>{user.kelasWali}</strong>.
+                </div>
+              )}
+            </div>
+            
+            {/* 2. DASHBOARD JURNAL (Komponen yang baru ditambahkan) */}
+            <DashboardView />
           </div>
         );
       case 'jurnal': return <JurnalView user={user} />;
