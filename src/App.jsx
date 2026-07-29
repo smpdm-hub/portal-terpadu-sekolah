@@ -12,6 +12,9 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [user, setUser] = useState(null); 
   const [isChecking, setIsChecking] = useState(true);
+  
+  // 💡 State baru untuk visibilitas sidebar di seluler
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const savedUser = sessionStorage.getItem('app_user');
@@ -25,6 +28,12 @@ export default function App() {
     sessionStorage.removeItem('app_user');
     setUser(null);
     setActiveTab('dashboard'); 
+  };
+
+  // 💡 Fungsi pembantu: Pindah tab sekaligus menutup sidebar di HP
+  const handleMenuClick = (tabName) => {
+    setActiveTab(tabName);
+    setIsSidebarOpen(false); // Otomatis menutup sidebar setelah menu dipilih
   };
 
   if (isChecking) {
@@ -47,7 +56,6 @@ export default function App() {
       case 'dashboard': 
         return (
           <div className="space-y-6">
-            {/* 1. KOTAK SELAMAT DATANG (Fungsi Lama Tetap Dipertahankan) */}
             <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Selamat Datang, {user.nama}!</h2>
               <p className="text-gray-600 mb-4">Akses Anda: <span className="font-bold text-blue-600">{user.role}</span></p>
@@ -57,8 +65,6 @@ export default function App() {
                 </div>
               )}
             </div>
-            
-            {/* 2. DASHBOARD JURNAL (Komponen yang baru ditambahkan) */}
             <DashboardView />
           </div>
         );
@@ -83,7 +89,6 @@ export default function App() {
 
   return (
     <>
-      {/* TEMBOK PELINDUNG: GLOBAL LOADING OVERLAY (ANTI-SPAM KLIK) */}
       {isLoading && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-gray-900/20 backdrop-blur-sm">
           <div className="bg-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4">
@@ -93,29 +98,47 @@ export default function App() {
         </div>
       )}
 
-      <div className="flex h-screen bg-gray-50 font-sans text-gray-800">
-        <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between">
+      <div className="flex h-screen bg-gray-50 font-sans text-gray-800 overflow-hidden relative">
+        
+        {/* 💡 OVERLAY GELAP UNTUK SELULER */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-gray-900/50 z-40 md:hidden transition-opacity backdrop-blur-sm"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        {/* 💡 SIDEBAR YANG RESPONSIF */}
+        <aside 
+          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col justify-between transform transition-transform duration-300 ease-in-out shadow-xl md:shadow-none md:relative md:translate-x-0 ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
           <div>
-            <div className="p-6 border-b border-gray-100">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
               <h1 className="text-xl font-black text-blue-600 tracking-tight">Portal<span className="text-gray-800">Sekolah</span></h1>
+              {/* Tombol X untuk menutup sidebar di HP */}
+              <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-gray-600">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
             </div>
             <nav className="p-4 space-y-1">
-              <MenuButton active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} label="Dashboard" />
-              <MenuButton active={activeTab === 'jurnal'} onClick={() => setActiveTab('jurnal')} label="Jurnal Mengajar" />
-              <MenuButton active={activeTab === 'galeri'} onClick={() => setActiveTab('galeri')} label="Galeri Sekolah" />
-              <MenuButton active={activeTab === 'bank-soal'} onClick={() => setActiveTab('bank-soal')} label="Bank Soal" />
+              <MenuButton active={activeTab === 'dashboard'} onClick={() => handleMenuClick('dashboard')} label="Dashboard" />
+              <MenuButton active={activeTab === 'jurnal'} onClick={() => handleMenuClick('jurnal')} label="Jurnal Mengajar" />
+              <MenuButton active={activeTab === 'galeri'} onClick={() => handleMenuClick('galeri')} label="Galeri Sekolah" />
+              <MenuButton active={activeTab === 'bank-soal'} onClick={() => handleMenuClick('bank-soal')} label="Bank Soal" />
               
               {(isWalas || isAdmin) && (
                 <>
                   <hr className="my-4 border-gray-200" />
-                  <MenuButton active={activeTab === 'walas'} onClick={() => setActiveTab('walas')} label="⭐ Menu Wali Kelas" />
+                  <MenuButton active={activeTab === 'walas'} onClick={() => handleMenuClick('walas')} label="⭐ Menu Wali Kelas" />
                 </>
               )}
 
               {isAdmin && (
                 <>
                   <hr className="my-4 border-gray-200" />
-                  <MenuButton active={activeTab === 'admin'} onClick={() => setActiveTab('admin')} label="⚙️ Ruang Admin" special={true} />
+                  <MenuButton active={activeTab === 'admin'} onClick={() => handleMenuClick('admin')} label="⚙️ Ruang Admin" special={true} />
                 </>
               )}
             </nav>
@@ -127,22 +150,38 @@ export default function App() {
           </div>
         </aside>
 
-        <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
-          <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 justify-between">
-            <h2 className="text-lg font-semibold capitalize">{activeTab.replace('-', ' ')}</h2>
+        <main className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
+          <header className="h-16 bg-white border-b border-gray-200 flex items-center px-4 md:px-6 justify-between flex-shrink-0">
+            
+            {/* 💡 BAGIAN KIRI HEADER: Tombol Hamburger & Judul */}
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setIsSidebarOpen(true)} 
+                className="md:hidden p-2 -ml-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 border border-gray-200 focus:outline-none"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <h2 className="text-lg font-semibold capitalize truncate">{activeTab.replace('-', ' ')}</h2>
+            </div>
+
+            {/* BAGIAN KANAN HEADER: Profil User */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 shadow-sm">
-                <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+              <div className="flex items-center gap-2 bg-blue-50 px-2.5 md:px-3 py-1.5 rounded-full border border-blue-100 shadow-sm">
+                <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
                   {user.nama.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-sm font-medium text-blue-800 pr-1">{user.nama}</span>
+                <span className="text-sm font-medium text-blue-800 pr-1 hidden sm:block">{user.nama}</span>
               </div>
             </div>
           </header>
-          <div className="flex-1 overflow-y-auto p-6">
+          
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
             {renderContent()}
           </div>
         </main>
+
       </div>
     </>
   )
