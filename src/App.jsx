@@ -69,7 +69,7 @@ export default function App() {
           </div>
         );
       case 'jurnal': return <JurnalView user={user} />;
-      case 'galeri': return <DokumentasiView />;
+      case 'galeri': return <DokumentasiView user={user} />;
       case 'bank-soal': return <BankSoalView />;
       case 'walas': return <WalasView user={user} />;
       case 'admin':
