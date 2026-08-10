@@ -6,7 +6,7 @@ import autoTable from 'jspdf-autotable';
 export default function WalasView({ user }) {
   const { fetchGAS } = useAppContext();
   
-  const isAdmin = user.role?.toLowerCase() === 'superadmin';
+  const isAdmin = user.role?.toLowerCase() === 'admin';
   const myKelas = user.kelasWali || ''; 
 
   const [selectedKelas, setSelectedKelas] = useState(isAdmin ? '' : myKelas);
