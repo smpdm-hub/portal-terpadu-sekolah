@@ -63,7 +63,7 @@ export default function DashboardView() {
           <div>
             <p className="text-xs font-semibold text-blue-600 uppercase">Total Jurnal Terisi</p>
             <p className="text-2xl font-black text-blue-900 mt-1">
-              {isFetching ? '...' : `${daftarJurnal.length} Kelas`}
+              {isFetching ? '...' : `${daftarJurnal.length} JP`}
             </p>
           </div>
           <span className="text-2xl">📖</span>
