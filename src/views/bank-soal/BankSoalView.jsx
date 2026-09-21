@@ -39,6 +39,8 @@ export default function BankSoalView() {
     check1: false,
     check2: false,
     check3: false,
+    check4: false,
+    check5: false,
   });
 
   const [fileNaskah, setFileNaskah] = useState(null);
@@ -66,7 +68,7 @@ export default function BankSoalView() {
   };
 
   const isInputReady = formData.mapel !== '' && formData.kelas !== '';
-  const isAllChecked = formData.check1 && formData.check2 && formData.check3;
+  const isAllChecked = formData.check1 && formData.check2 && formData.check3 && formData.check4 && formData.check5;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,7 +90,7 @@ export default function BankSoalView() {
       alert('Naskah berhasil diarsipkan ke Google Drive & Sheets!');
       setFileNaskah(null);
       setFileBase64('');
-      setFormData(prev => ({...prev, check1: false, check2: false, check3: false}));
+      setFormData(prev => ({...prev, check1: false, check2: false, check3: false, check4: false, check5: false}));
     } else {
       alert('Gagal mengunggah naskah. Periksa koneksi GAS Anda.');
     }
