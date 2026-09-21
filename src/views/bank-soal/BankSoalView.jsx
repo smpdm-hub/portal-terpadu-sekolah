@@ -172,15 +172,15 @@ export default function BankSoalView() {
             <div className="space-y-3 mb-6">
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
                 <input type="checkbox" name="check1" checked={formData.check1} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
-                <span className="text-sm font-medium text-gray-700">1. Kisi-kisi Ujian</span>
+                <span className="text-sm font-medium text-gray-700">1. Kisi-kisi Asesmen</span>
               </label>
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
                 <input type="checkbox" name="check2" checked={formData.check2} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
-                <span className="text-sm font-medium text-gray-700">2. Naskah Soal & Kunci Jawabn Sesuai Ketentuan Akademik</span>
+                <span className="text-sm font-medium text-gray-700">2. Naskah Soal & Kunci Jawaban Sesuai Ketentuan Akademik</span>
               </label>
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
                 <input type="checkbox" name="check3" checked={formData.check3} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
-                <span className="text-sm font-medium text-gray-700">3. Kartu Soal & Panduan Skor</span>
+                <span className="text-sm font-medium text-gray-700">3. Kartu Soal & Panduan Skora/Penilaian</span>
               </label>
             </div>
 
