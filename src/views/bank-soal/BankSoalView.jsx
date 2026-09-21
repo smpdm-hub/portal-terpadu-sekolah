@@ -185,12 +185,11 @@ export default function BankSoalView() {
                 <span className="text-sm font-medium text-gray-700">3. Kunci Jawaban</span>
               </label>
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
-                <input type="checkbox" name="check3" checked={formData.check3} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
+                <input type="checkbox" name="check4" checked={formData.check4} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
                 <span className="text-sm font-medium text-gray-700">4. Panduan Skoring/Penilaian</span>
               </label>
-              </label>
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
-                <input type="checkbox" name="check3" checked={formData.check3} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
+                <input type="checkbox" name="check5" checked={formData.check5} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
                 <span className="text-sm font-medium text-gray-700">5. Kartu Soal</span>
               </label>
             </div>
