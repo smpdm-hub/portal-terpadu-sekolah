@@ -176,11 +176,20 @@ export default function BankSoalView() {
               </label>
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
                 <input type="checkbox" name="check2" checked={formData.check2} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
-                <span className="text-sm font-medium text-gray-700">2. Naskah Soal & Kunci Jawaban Sesuai Ketentuan Akademik</span>
+                <span className="text-sm font-medium text-gray-700">2. Naskah Soal Sesuai Ketentuan Akademik</span>
               </label>
               <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
                 <input type="checkbox" name="check3" checked={formData.check3} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
-                <span className="text-sm font-medium text-gray-700">3. Kartu Soal & Panduan Skora/Penilaian</span>
+                <span className="text-sm font-medium text-gray-700">3. Kunci Jawaban</span>
+              </label>
+              <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
+                <input type="checkbox" name="check3" checked={formData.check3} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
+                <span className="text-sm font-medium text-gray-700">4. Panduan Skoring/Penilaian</span>
+              </label>
+              </label>
+              <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-indigo-300 transition-colors">
+                <input type="checkbox" name="check3" checked={formData.check3} onChange={handleChange} className="w-5 h-5 text-indigo-600 rounded" />
+                <span className="text-sm font-medium text-gray-700">5. Kartu Soal</span>
               </label>
             </div>
 
