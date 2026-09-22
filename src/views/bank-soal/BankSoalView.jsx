@@ -30,7 +30,7 @@ export default function BankSoalView() {
   const { fetchGAS, isLoading } = useAppContext();
   
   const [formData, setFormData] = useState({
-    tahunPelajaran: '2025/2026',
+    tahunPelajaran: '2026/2027',
     semester: 'Ganjil',
     jenisUjian: 'PTS',
     mapel: '',
