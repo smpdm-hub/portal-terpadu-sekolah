@@ -92,7 +92,7 @@ export default function BankSoalView() {
       setFileBase64('');
       setFormData(prev => ({...prev, check1: false, check2: false, check3: false, check4: false, check5: false}));
     } else {
-      alert('Gagal mengunggah naskah. Periksa koneksi GAS Anda.');
+      alert(result?.message || 'Gagal mengunggah naskah. Periksa koneksi GAS Anda.');
     }
   };
 
