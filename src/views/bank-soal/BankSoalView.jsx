@@ -23,7 +23,7 @@ const DAFTAR_MAPEL = [
 const DAFTAR_KELAS = [
   '7A', '7B', '7C', 
   '8A', '8B', '8C', 
-  '9A', '9B', '9C'
+  '9A', '9B', '9C', '7-8-9'
 ];
 
 export default function BankSoalView() {
