@@ -4,6 +4,7 @@ import BankSoalView from './views/bank-soal/BankSoalView';
 import DokumentasiView from './views/dokumentasi/DokumentasiView';
 import JurnalView from './views/jurnal/JurnalView';
 import LoginView from './views/auth/LoginView';
+import PengawasView from './views/pengawas/PengawasView';
 import { useState, useEffect } from 'react';
 import { useAppContext } from './context/AppContext';
 
@@ -71,6 +72,7 @@ export default function App() {
       case 'jurnal': return <JurnalView user={user} />;
       case 'galeri': return <DokumentasiView user={user} />;
       case 'bank-soal': return <BankSoalView />;
+      case 'pengawas': return <PengawasView user={user} />;
       case 'walas': return <WalasView user={user} />;
       case 'admin':
         return (
@@ -127,6 +129,7 @@ export default function App() {
               <MenuButton active={activeTab === 'jurnal'} onClick={() => handleMenuClick('jurnal')} label="Jurnal Mengajar" />
               <MenuButton active={activeTab === 'galeri'} onClick={() => handleMenuClick('galeri')} label="Galeri Sekolah" />
               <MenuButton active={activeTab === 'bank-soal'} onClick={() => handleMenuClick('bank-soal')} label="Bank Soal" />
+              <MenuButton active={activeTab === 'pengawas'} onClick={() => handleMenuClick('pengawas')} label="Pengawas Ujian" />
               
               {(isWalas || isAdmin) && (
                 <>
