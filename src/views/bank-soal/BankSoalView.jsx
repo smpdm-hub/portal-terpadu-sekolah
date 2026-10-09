@@ -8,7 +8,7 @@ const DAFTAR_MAPEL = [
   'Fiqih/PAI',
   'Bahasa Arab',
   'Nahwu Sharaf',
-  'Imla'',
+  'Imlak',
   'Matematika', 
   'Bahasa Indonesia', 
   'Bahasa Inggris', 
