@@ -130,7 +130,6 @@ export default function App() {
               <MenuButton active={activeTab === 'galeri'} onClick={() => handleMenuClick('galeri')} label="📸 Galeri Sekolah" />
               <MenuButton active={activeTab === 'bank-soal'} onClick={() => handleMenuClick('bank-soal')} label="🗂️ Bank Soal" />
               <MenuButton active={activeTab === 'pengawas'} onClick={() => handleMenuClick('pengawas')} label="📋 Pengawas Ujian" />
-              <MenuButton active={activeTab === 'pengawas'} onClick={() => handleMenuClick('pengawas')} label="⛔ Pengawas Ujian (beta)" />
               
               {(isWalas || isAdmin) && (
                 <>
