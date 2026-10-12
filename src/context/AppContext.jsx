@@ -4,7 +4,7 @@ const AppContext = createContext();
 
 // 💡 VARIABEL CADANGAN (FALLBACK): Masukkan URL Web App GAS paman di sini.
 // Jika file .env lokal tidak terbaca saat di-deploy ke hosting, URL ini yang akan otomatis bekerja.
-const FALLBACK_GAS_URL = "ttps://script.google.com/macros/s/AKfycbzplNqGBiiQnuEZcEbRD0wE3h9WAm7zrroiXAJ2zHGXoyj7NZBWMSLGOlTFZ7kKa0hm/exec";
+const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbzplNqGBiiQnuEZcEbRD0wE3h9WAm7zrroiXAJ2zHGXoyj7NZBWMSLGOlTFZ7kKa0hm/exec";
 
 // Variabel memori lokal untuk melacak waktu pemanggilan terakhir (Anti-Spam)
 let lastFetchTime = {};
