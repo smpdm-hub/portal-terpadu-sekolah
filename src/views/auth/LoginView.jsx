@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
+import logoKaligrafi from '../../assets/logo_sso.svg';
 
 export default function LoginView({ onLoginSuccess }) {
   const { fetchGAS, isLoading } = useAppContext();
@@ -35,6 +36,13 @@ export default function LoginView({ onLoginSuccess }) {
     <div className="flex items-center justify-center min-h-[70vh]">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
         <div className="text-center mb-8">
+          {/* 2. UBAH BAGIAN GAMBAR LOGO DI SINI */}
+          {/* Menggunakan h-16 (tinggi proporsional) dan w-auto (lebar otomatis) */}
+          <img 
+            src={logoKaligrafi} 
+            className="h-16 mb-4 object-contain mx-auto" 
+            alt="Logo Kaligrafi" 
+          />
           <h2 className="text-2xl font-bold text-gray-800">SSO SMP Darul Madinah</h2>
           <p className="text-gray-500 text-sm mt-2">Silakan masuk untuk mengakses fitur terpadu GTK</p>
         </div>
