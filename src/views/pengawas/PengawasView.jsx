@@ -20,7 +20,7 @@ export default function PengawasView({ user }) {
   // State Tanda Tangan & Form Berita Acara
   const [modeTtd, setModeTtd] = useState(''); // 'pengawas' | 'siswa_manual'
   const [dataTtdSiswa, setDataTtdSiswa] = useState({ nis: '', nama: '' });
-  const [formBA, setFormBA] = useState({ jmlSeharusnya: '', catatan: '' });
+  const [formBA, setFormBA] = useState({ catatan: '' });
 
   // Refs Canvas TTD
   const canvasRef = useRef(null);
@@ -107,6 +107,14 @@ export default function PengawasView({ user }) {
     setFormBA({ jmlSeharusnya: '', catatan: '' });
     setActiveModal('signature');
   };
+  
+  const editBA = (jadwal) => {
+    setModeTtd('pengawas');
+    setDataSesiAktif(jadwal);
+    // Isi otomatis form dengan catatan yang sudah ada sebelumnya
+    setFormBA({ catatan: jadwal.catatan || '' }); 
+    setActiveModal('signature');
+  };
 
   const clearSignature = () => {
     if (signaturePadRef.current) {
@@ -123,14 +131,13 @@ export default function PengawasView({ user }) {
     const base64TTD = signaturePadRef.current.toDataURL('image/png');
 
     if (modeTtd === 'pengawas') {
-      if (!formBA.jmlSeharusnya || !formBA.catatan) {
-        alert("Jumlah peserta dan catatan wajib diisi!");
+      if (!formBA.catatan) {
+        alert("Catatan wajib diisi!");
         return;
       }
       const payload = {
         id_jadwal: dataSesiAktif.id,
         ttd_base64: base64TTD,
-        jml_seharusnya: formBA.jmlSeharusnya,
         catatan: formBA.catatan
       };
       await callPengawasAPI('saveLaporanPengawas', payload);
@@ -329,9 +336,14 @@ export default function PengawasView({ user }) {
                             Buat Laporan BA
                           </button>
                         ) : (
-                          <button onClick={() => bukaDetailSesi(j.id)} className="px-3 py-1.5 border border-gray-300 bg-white hover:bg-gray-50 rounded-lg text-xs font-semibold text-gray-700 shadow-sm">
-                            Lihat & Cetak PDF
-                          </button>
+                          <div className="flex flex-col space-y-1 items-end">
+                            <button onClick={() => bukaDetailSesi(j.id)} className="w-full px-3 py-1.5 border border-gray-300 bg-white hover:bg-gray-50 rounded-lg text-xs font-semibold text-gray-700 shadow-sm">
+                              Lihat & Cetak
+                            </button>
+                            <button onClick={() => editBA(j)} className="w-full px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm">
+                              ✏️ Edit BA
+                            </button>
+                          </div>
                         )}
                       </div>
                     </td>
@@ -413,10 +425,6 @@ export default function PengawasView({ user }) {
             <div className="p-6 flex-grow overflow-y-auto space-y-4">
               {modeTtd === 'pengawas' && (
                 <>
-                  <div>
-                    <label className="block text-xs font-bold mb-1 text-gray-700">Jumlah Peserta Seharusnya</label>
-                    <input type="number" value={formBA.jmlSeharusnya} onChange={(e) => setFormBA({ ...formBA, jmlSeharusnya: e.target.value })} className="w-full border rounded-xl px-3 py-2 text-sm outline-none focus:border-indigo-500" placeholder="Contoh: 30" />
-                  </div>
                   <div>
                     <label className="block text-xs font-bold mb-1 text-gray-700">Catatan Ujian</label>
                     <textarea value={formBA.catatan} onChange={(e) => setFormBA({ ...formBA, catatan: e.target.value })} className="w-full border rounded-xl px-3 py-2 text-sm outline-none focus:border-indigo-500" rows={3} placeholder="Berjalan tertib dan lancar..." />
