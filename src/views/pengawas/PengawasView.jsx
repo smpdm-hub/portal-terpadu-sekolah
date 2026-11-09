@@ -123,29 +123,42 @@ export default function PengawasView({ user }) {
   };
 
   const saveSignature = async () => {
-    if (!signaturePadRef.current || signaturePadRef.current.isEmpty()) {
-      alert("Tanda tangan tidak boleh kosong!");
-      return;
-    }
-
-    const base64TTD = signaturePadRef.current.toDataURL('image/png');
+    // Cek apakah canvas kosong
+    const isCanvasEmpty = !signaturePadRef.current || signaturePadRef.current.isEmpty();
+    const base64TTD = isCanvasEmpty ? "" : signaturePadRef.current.toDataURL('image/png');
 
     if (modeTtd === 'pengawas') {
       if (!formBA.catatan) {
         alert("Catatan wajib diisi!");
         return;
       }
+
+      // Validasi: Tolak jika BA baru DAN canvas kosong
+      if (!dataSesiAktif.ttd_pengawas && isCanvasEmpty) {
+        alert("Tanda tangan tidak boleh kosong untuk Berita Acara baru!");
+        return;
+      }
+
       const payload = {
         id_jadwal: dataSesiAktif.id,
-        ttd_base64: base64TTD,
         catatan: formBA.catatan
       };
+
+      // Efisiensi: Hanya kirim payload tanda tangan jika pengawas menggambar ulang
+      if (!isCanvasEmpty) {
+        payload.ttd_base64 = base64TTD;
+      }
+
       await callPengawasAPI('saveLaporanPengawas', payload);
       alert("Berita Acara berhasil disimpan!");
       setActiveModal(null);
       loadJadwal();
 
     } else if (modeTtd === 'siswa_manual') {
+      if (isCanvasEmpty) {
+        alert("Tanda tangan siswa tidak boleh kosong!");
+        return;
+      }
       const payload = {
         nis: dataTtdSiswa.nis, nama_peserta: dataTtdSiswa.nama, kelas: dataSesiAktif.kelas,
         id_jadwal: dataSesiAktif.id, tanggal: dataSesiAktif.tanggal, jam: dataSesiAktif.jam,
@@ -157,7 +170,7 @@ export default function PengawasView({ user }) {
       loadListSiswaManual(dataSesiAktif.id, dataSesiAktif.kelas);
     }
   };
-
+  
   // ================= DETAIL & CETAK PDF =================
   const bukaDetailSesi = async (id_jadwal) => {
     setDetailDataCache(null);
@@ -425,6 +438,13 @@ export default function PengawasView({ user }) {
             <div className="p-6 flex-grow overflow-y-auto space-y-4">
               {modeTtd === 'pengawas' && (
                 <>
+                  {/* Tambahan Notifikasi Mode Edit */}
+                  {dataSesiAktif.ttd_pengawas && (
+                    <div className="p-3 bg-blue-50 text-blue-700 text-xs rounded-xl border border-blue-100 font-medium">
+                      ℹ️ Mode Edit: Catatan lama dimuat. Biarkan area tanda tangan di bawah KOSONG jika tidak ingin mengubah tanda tangan lama.
+                    </div>
+                  )}
+                  
                   <div>
                     <label className="block text-xs font-bold mb-1 text-gray-700">Catatan Ujian</label>
                     <textarea value={formBA.catatan} onChange={(e) => setFormBA({ ...formBA, catatan: e.target.value })} className="w-full border rounded-xl px-3 py-2 text-sm outline-none focus:border-indigo-500" rows={3} placeholder="Berjalan tertib dan lancar..." />
