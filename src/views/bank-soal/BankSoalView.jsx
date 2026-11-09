@@ -58,6 +58,13 @@ export default function BankSoalView() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Validasi Lapis 2: Memastikan file benar-benar berformat PDF
+      if (file.type !== 'application/pdf') {
+        alert('Maaf, hanya file berformat PDF yang diperbolehkan!');
+        e.target.value = ''; // Mengosongkan input yang salah
+        return;
+      }
+
       setFileNaskah(file.name);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -197,7 +204,8 @@ export default function BankSoalView() {
 
             {isAllChecked && (
               <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${fileNaskah ? 'border-green-400 bg-green-50' : 'border-indigo-300 bg-white'}`}>
-                <input type="file" id="naskah" accept=".pdf,.doc,.docx" onChange={handleFileChange} className="hidden" />
+                {/* Pembatasan Lapis 1: Atribut accept disetel khusus PDF */}
+                <input type="file" id="naskah" accept=".pdf,application/pdf" onChange={handleFileChange} className="hidden" />
                 <label htmlFor="naskah" className="cursor-pointer flex flex-col items-center">
                   {fileNaskah ? (
                     <>
@@ -213,7 +221,8 @@ export default function BankSoalView() {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-indigo-400 mb-2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                       </svg>
-                      <span className="text-sm font-semibold text-indigo-600">Klik untuk memilih file naskah (PDF/Word)</span>
+                      {/* Ubah teks agar guru tahu hanya boleh PDF */}
+                      <span className="text-sm font-semibold text-indigo-600">Klik untuk memilih file naskah (Hanya PDF)</span>
                     </>
                   )}
                 </label>
