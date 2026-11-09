@@ -341,6 +341,23 @@ export default function PengawasView({ user }) {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex flex-col space-y-2 items-end">
+    
+                        {/* --- FITUR BARU: TOMBOL PANTAU GFORM --- */}
+                        {j.link_ujian && (
+                          <button 
+                            onClick={() => {
+                              // Ubah link siswa (viewform) menjadi link admin (edit) dan arahkan langsung ke tab responses
+                              const adminLink = j.link_ujian.includes('/viewform') 
+                                ? j.link_ujian.replace(/\/viewform.*/, '/edit#responses') 
+                                : j.link_ujian;
+                              window.open(adminLink, '_blank');
+                            }} 
+                            className="w-full px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm"
+                          >
+                            📊 Pantau GForm
+                          </button>
+                        )}
+                        {/* --------------------------------------- */}
                         <button onClick={() => bukaPresensiOffline(j)} className="px-3 py-1.5 bg-gray-800 text-white hover:bg-gray-700 rounded-lg text-xs font-semibold shadow-sm">
                           📋 Kelola Presensi
                         </button>
